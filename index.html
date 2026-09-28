@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>NovelCraft Studio - AI 웹소설 전용 집필 스튜디오</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700&family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#12131a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NovelCraft">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="icon" href="icons/icon-192.png">
+</head>
+<body class="dark-theme">
+  <!-- 상단 네비게이션 헤더 -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo">
+        <span class="logo-icon">🖋️</span>
+        <span class="logo-title">NovelCraft</span>
+        <span class="logo-badge">Studio</span>
+      </div>
+      <div class="project-selector-wrapper">
+        <select id="projectSelect" class="project-dropdown"></select>
+        <button id="btnNewProject" class="btn btn-secondary btn-sm">+ 새 작품</button>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <nav class="step-tabs">
+        <button class="tab-btn active" data-tab="tab-plan">
+          <span class="tab-step">STEP 1</span>
+          <span class="tab-label">기획 & 로그라인</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-chars">
+          <span class="tab-step">STEP 2</span>
+          <span class="tab-label">인물 도감</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-studio">
+          <span class="tab-step">STEP 3</span>
+          <span class="tab-label">화차별 집필실</span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="header-right">
+      <span id="saveStatus" class="save-status">저장됨</span>
+      <a href="/chat.html" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration:none;" title="AI와의 전체 대화 기록 새 창 열기">💬 대화 기록</a>
+      <button id="btnSaveAll" class="btn btn-primary btn-sm">💾 저장 (Ctrl+S)</button>
+      <button id="btnOpenSettings" class="btn btn-icon" title="API 설정">⚙️</button>
+    </div>
+  </header>
+
+  <!-- 메인 컨테이너 -->
+  <main class="main-container">
+
+    <!-- STEP 1: 기획 & 로그라인 탭 -->
+    <section id="tab-plan" class="tab-content active">
+      <div class="panel-layout single-col">
+        <div class="card">
+          <div class="card-header">
+            <h3>1. 기본 정보 & 핵심 소재</h3>
+            <span class="card-desc">작품의 기틀이 되는 장르와 핵심 키워드를 정의합니다.</span>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>소설 제목</label>
+              <input type="text" id="planTitle" class="input-text" placeholder="예: 망나니 재벌 3세의 상태창 독점">
+            </div>
+            <div class="form-group">
+              <label>장르</label>
+              <select id="planGenre" class="input-select">
+                <option value="현대 판타지 / 재벌·전문가물">현대 판타지 / 재벌·전문가물</option>
+                <option value="현대 판타지 / 헌터·상태창물">현대 판타지 / 헌터·상태창물</option>
+                <option value="정통·퓨전 판타지">정통·퓨전 판타지</option>
+                <option value="아카데미 / 착각계">아카데미 / 착각계</option>
+                <option value="신무협 / 무협 판타지">신무협 / 무협 판타지</option>
+                <option value="로맨스 판타지 (로판)">로맨스 판타지 (로판)</option>
+              </select>
+            </div>
+            <div class="form-group full-width">
+              <label>핵심 키워드</label>
+              <input type="text" id="planKeywords" class="input-text" placeholder="예: 회귀, 복수, 상태창, 주식, 사이다">
+            </div>
+            <div class="form-group full-width">
+              <label>아이디어 메모 / 영감</label>
+              <textarea id="planIdea" class="input-textarea" rows="3" placeholder="어떤 재미있는 상황이나 클리셰 비틀기를 생각하셨나요? 편하게 적어보세요."></textarea>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button id="btnAiLogline" class="btn btn-ai">✨ AI 로그라인 3종 추천받기</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>2. 확정 로그라인 (소설의 척추)</h3>
+            <span class="card-desc">주인공의 결핍 + 계기 + 사이다 목표가 담긴 1~2줄 요약</span>
+          </div>
+          <div class="form-group">
+            <textarea id="planLogline" class="input-textarea" rows="3" placeholder="예: 배신당해 죽은 재벌 서자가 15년 전 망나니 시절로 회귀하여, 타인의 속마음과 주가가 보이는 상태창으로 가문을 통째로 집어삼킨다."></textarea>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>3. 세계관 핵심 법칙 & 사이다 규칙</h3>
+            <span class="card-desc">작품 내에서 절대 깨지지 않는 법칙을 적어두면 AI가 복선과 전개에 반영합니다.</span>
+          </div>
+          <div class="form-group">
+            <textarea id="planWorldRules" class="input-textarea" rows="4" placeholder="예:&#10;1. 상태창은 주인공에게만 보인다.&#10;2. 미래 주가 변동률을 퍼센트로 확인 가능하다.&#10;3. 주인공을 방해하는 악역은 3화 이내에 참교육당한다."></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 2: 인물 도감 탭 -->
+    <section id="tab-chars" class="tab-content">
+      <div class="chars-header-bar">
+        <div>
+          <h2>등장인물 바이블 (Character Bible)</h2>
+          <p class="subtitle">등장인물의 말투와 성격을 기록해두면, AI가 각 인물의 고유한 말투로 대사를 써냅니다.</p>
+        </div>
+        <div class="chars-btn-group">
+          <button id="btnAiCharacter" class="btn btn-ai">✨ AI 맞춤형 캐릭터 생성</button>
+          <button id="btnAddCharacter" class="btn btn-primary">+ 인물 직접 추가</button>
+        </div>
+      </div>
+
+      <div id="characterList" class="character-card-grid">
+        <!-- 동적 렌더링 영역 -->
+      </div>
+    </section>
+
+    <!-- STEP 3: 화차별 집필실 탭 -->
+    <section id="tab-studio" class="tab-content">
+      <div class="studio-layout">
+        <!-- 좌측: 회차 사이드바 -->
+        <aside class="episodes-sidebar">
+          <div class="sidebar-header">
+            <h4>회차 목록</h4>
+            <button id="btnAddEpisode" class="btn btn-secondary btn-xs">+ 새 회차</button>
+          </div>
+          <ul id="episodeList" class="episode-nav-list">
+            <!-- 동적 렌더링 영역 -->
+          </ul>
+        </aside>
+
+        <!-- 중앙: 집필 에디터 -->
+        <section class="editor-center">
+          <!-- 글자 수 HUD 바 -->
+          <div class="hud-bar">
+            <div class="hud-stats">
+              <span class="stat-item">공백 포함: <strong id="charCountWithSpace">0</strong>자</span>
+              <span class="stat-divider">|</span>
+              <span class="stat-item">공백 제외: <strong id="charCountWithoutSpace">0</strong>자</span>
+              <span class="stat-divider">|</span>
+              <span class="stat-item">목표: <strong>5,000자</strong> (<span id="charProgressPercent">0%</span>)</span>
+            </div>
+            <div class="progress-track">
+              <div id="progressBar" class="progress-fill" style="width: 0%;"></div>
+            </div>
+            <div class="hud-export">
+              <button id="btnExportTxt" class="btn btn-secondary btn-xs">📥 .txt 다운로드</button>
+            </div>
+          </div>
+
+          <!-- 회차 타이틀 -->
+          <div class="episode-title-input-wrapper">
+            <input type="text" id="epTitleInput" class="ep-title-input" placeholder="제1화. 에피소드 제목">
+          </div>
+
+          <!-- 본문 에디터 -->
+          <div class="editor-textarea-wrapper">
+            <textarea id="epContentInput" class="editor-textarea" placeholder="여기에 소설 본문을 작성하세요.&#10;&#10;우측 [AI 페어 라이터] 패널을 이용하면 이번 화 플롯을 잡거나 초안을 즉시 추천받을 수 있습니다."></textarea>
+          </div>
+        </section>
+
+        <!-- 우측: AI 페어 라이터 사이드패널 -->
+        <aside class="ai-assistant-sidebar">
+          <div class="ai-panel-header">
+            <h4>🤖 AI 페어 라이터</h4>
+            <span class="badge-mini">웹소설 특화</span>
+          </div>
+
+          <div class="ai-section">
+            <div class="section-label-row">
+              <label class="ai-label">이번 화 핵심 목표 / 사건</label>
+              <div class="label-actions">
+                <button id="btnAiSuggestGoal" class="btn-mini-tool" title="이전 화와 설정을 바탕으로 사건 아이디어 추천">✨ AI 추천</button>
+                <button id="btnRefreshGoal" class="btn-mini-tool highlight" title="수정한 내용을 즉시 저장하고 플롯/AI에 반영">🔄 반영/새로고침</button>
+              </div>
+            </div>
+            <textarea id="epGoalInput" class="ai-mini-textarea" rows="3" placeholder="예: 삼촌의 사기 각서를 찢어버리며 통쾌한 역도발"></textarea>
+            <div id="goalSyncToast" class="sync-toast" style="display:none;"></div>
+          </div>
+
+          <div class="ai-actions-list">
+            <button id="btnAiPlot" class="btn btn-ai-action">
+              <span class="icon">📐</span>
+              <div class="btn-text">
+                <strong>1. 이번 화 뼈대(플롯) 잡기</strong>
+                <small>기승전결 + 절벽엔딩(클리프행어) 4단계</small>
+              </div>
+            </button>
+
+            <div class="plot-box-wrapper">
+              <div class="section-label-row">
+                <label class="ai-label">이번 화 플롯 메모</label>
+                <button id="btnRefreshPlotFromGoal" class="btn-mini-tool" title="위 목표/사건을 바탕으로 플롯 뼈대 새로고침">🔄 플롯 새로고침</button>
+              </div>
+              <textarea id="epPlotInput" class="ai-mini-textarea" rows="4" placeholder="플롯 뼈대가 여기에 기록됩니다."></textarea>
+            </div>
+
+            <button id="btnAiDraft" class="btn btn-ai-action">
+              <span class="icon">✍️</span>
+              <div class="btn-text">
+                <strong>2. 플롯 바탕 초안 생성</strong>
+                <small>캐릭터 말투 반영 1,500자 초안</small>
+              </div>
+            </button>
+
+            <button id="btnAiPolish" class="btn btn-ai-action">
+              <span class="icon">⚡</span>
+              <div class="btn-text">
+                <strong>3. 사이다/텐션 강화 윤문</strong>
+                <small>작성한 본문의 리듬감과 몰입도 극대화</small>
+              </div>
+            </button>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- 캐릭터 추가/수정 모달 -->
+  <div id="charModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="charModalTitle">등장인물 등록</h3>
+        <button class="modal-close" id="btnCloseCharModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="charId">
+        <div class="form-group">
+          <label>이름 / 나이</label>
+          <input type="text" id="charName" class="input-text" placeholder="예: 강현우 (27세)">
+        </div>
+        <div class="form-group">
+          <label>역할</label>
+          <select id="charRole" class="input-select">
+            <option value="주인공">주인공</option>
+            <option value="메인 빌런 (악역)">메인 빌런 (악역)</option>
+            <option value="조력자 / 멘토">조력자 / 멘토</option>
+            <option value="히로인 / 동료">히로인 / 동료</option>
+            <option value="기타 조연">기타 조연</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>외모 및 성격 특징</label>
+          <textarea id="charTrait" class="input-textarea" rows="2" placeholder="예: 겉으로는 능글맞은 망나니 흉내를 내지만 내면은 얼음장처럼 차가운 지략가."></textarea>
+        </div>
+        <div class="form-group">
+          <label>시그니처 대사 및 말투 (Voice)</label>
+          <textarea id="charVoice" class="input-textarea" rows="2" placeholder="예: 여유로운 존댓말. 빈정거리는 뉘앙스. '삼촌, 그 돈은 제 겁니다.'"></textarea>
+        </div>
+        <div class="form-group">
+          <label>비밀 또는 치명적인 약점</label>
+          <input type="text" id="charSecret" class="input-text" placeholder="예: 전생에서 배신당했던 트라우마">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btnDeleteChar" class="btn btn-danger" style="display:none;">삭제</button>
+        <div style="flex:1;"></div>
+        <button id="btnCancelCharModal" class="btn btn-secondary">취소</button>
+        <button id="btnSaveChar" class="btn btn-primary">저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI 프롬프트 / 결과 팝업 모달 -->
+  <div id="aiModal" class="modal-overlay">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h3 id="aiModalTitle">AI 페어 라이팅</h3>
+        <button class="modal-close" id="btnCloseAiModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="aiResultArea" class="ai-result-area">
+          <label class="modal-sublabel">생성 결과 / 추천 내용</label>
+          <div id="aiOutputText" class="ai-output-box">결과를 불러오는 중...</div>
+        </div>
+
+        <div class="ai-prompt-accordion">
+          <details>
+            <summary>📋 사용된 정밀 웹소설 프롬프트 보기 (클릭하여 열기)</summary>
+            <textarea id="aiPromptText" class="input-textarea prompt-box" rows="8" readonly></textarea>
+          </details>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btnCopyPrompt" class="btn btn-secondary">📋 프롬프트 복사 (무료 ChatGPT/Claude용)</button>
+        <button id="btnCopyOutput" class="btn btn-secondary">📄 생성 결과 복사</button>
+        <button id="btnApplyAiResult" class="btn btn-primary">✅ 현재 에디터에 적용하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- API 설정 모달 -->
+  <div id="settingsModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>⚙️ AI API 및 연동 설정</h3>
+        <button class="modal-close" id="btnCloseSettingsModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="info-callout">
+          💡 <strong>API 키가 없어도 100% 무료로 사용할 수 있습니다.</strong><br>
+          API 키를 등록하지 않으시면, 원클릭으로 웹소설 전용 프롬프트가 복사되어 무료 웹 버전 ChatGPT나 Claude에 붙여넣어 쓰실 수 있습니다.
+        </div>
+        <div class="form-group">
+          <label>사용할 AI 엔진</label>
+          <select id="settingApiType" class="input-select">
+            <option value="anthropic">Anthropic (Claude 3.5 Sonnet 권장)</option>
+            <option value="openai">OpenAI (GPT-4o)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>API Key (선택 사항)</label>
+          <input type="password" id="settingApiKey" class="input-text" placeholder="sk-ant-... 또는 sk-proj-...">
+        </div>
+        <div class="form-group">
+          <label>모델 이름 (비워두면 기본값 사용)</label>
+          <input type="text" id="settingModelName" class="input-text" placeholder="기본값: claude-3-5-sonnet-20241022 / gpt-4o">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btnCancelSettings" class="btn btn-secondary">닫기</button>
+        <button id="btnSaveSettings" class="btn btn-primary">설정 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js").catch((err) => console.error("SW 등록 실패:", err));
+      });
+    }
+  </script>
+</body>
+</html>
