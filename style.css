@@ -219,7 +219,9 @@ label {
 }
 
 .input-textarea {
-  resize: vertical;
+  resize: both;
+  overflow: auto;
+  min-height: 2.4em;
   line-height: 1.6;
 }
 
@@ -514,7 +516,7 @@ label {
   font-size: 1.08rem;
   line-height: 1.9;
   font-family: var(--font-novel);
-  resize: none;
+  resize: vertical;
   letter-spacing: -0.2px;
 }
 .editor-textarea::placeholder {
@@ -621,7 +623,9 @@ label {
   border-radius: 6px;
   font-size: 0.85rem;
   line-height: 1.5;
-  resize: vertical;
+  resize: both;
+  overflow: auto;
+  min-height: 2.4em;
   outline: none;
 }
 .ai-actions-list {
