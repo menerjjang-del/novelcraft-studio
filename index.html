@@ -295,14 +295,14 @@
       </div>
       <div class="modal-body">
         <div id="aiResultArea" class="ai-result-area">
-          <label class="modal-sublabel">생성 결과 / 추천 내용</label>
-          <div id="aiOutputText" class="ai-output-box">결과를 불러오는 중...</div>
+          <label class="modal-sublabel">생성 결과 / 추천 내용 (직접 수정 가능 · 수정 후 [적용하기]를 누르면 수정한 내용이 반영됩니다)</label>
+          <textarea id="aiOutputText" class="input-textarea ai-output-box" rows="10">결과를 불러오는 중...</textarea>
         </div>
 
         <div class="ai-prompt-accordion">
           <details>
-            <summary>📋 사용된 정밀 웹소설 프롬프트 보기 (클릭하여 열기)</summary>
-            <textarea id="aiPromptText" class="input-textarea prompt-box" rows="8" readonly></textarea>
+            <summary>📋 사용된 정밀 웹소설 프롬프트 보기 (클릭하여 열기, 수정도 가능합니다)</summary>
+            <textarea id="aiPromptText" class="input-textarea prompt-box" rows="8"></textarea>
           </details>
         </div>
       </div>

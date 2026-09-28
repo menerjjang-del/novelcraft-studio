@@ -152,8 +152,8 @@ async function loadProjectDetail(projId) {
   try {
     state.currentProject = await apiGet("get", { id: projId });
     el.projectSelect.value = projId;
-    state.currentEpNum = state.currentProject.episodes && state.currentProject.episodes.length > 0 
-      ? state.currentProject.episodes[0].num 
+    state.currentEpNum = state.currentProject.episodes && state.currentProject.episodes.length > 0
+      ? state.currentProject.episodes[0].num
       : 1;
 
     renderStep1();
@@ -222,7 +222,7 @@ function renderStep2() {
   chars.forEach(c => {
     const card = document.createElement("div");
     card.className = "char-card";
-    
+
     let roleClass = "role-other";
     if (c.role.includes("주인공")) roleClass = "role-hero";
     else if (c.role.includes("악역") || c.role.includes("빌런")) roleClass = "role-villain";
@@ -242,7 +242,7 @@ function renderStep2() {
 function renderStep3() {
   if (!state.currentProject) return;
   const episodes = state.currentProject.episodes || [];
-  
+
   // 회차 목록 사이드바 렌더링
   el.episodeList.innerHTML = "";
   episodes.forEach(ep => {
@@ -363,8 +363,8 @@ async function requestAiTask(task, params = {}) {
   const settings = await getSavedSettings();
   const directCall = Boolean(settings.api_key); // API 키가 있으면 직접 호출, 없으면 프롬프트 생성 모드
 
-  el.aiOutputText.textContent = directCall 
-    ? "✨ AI가 웹소설 특화 분석 및 생성을 진행 중입니다..." 
+  el.aiOutputText.value = directCall
+    ? "✨ AI가 웹소설 특화 분석 및 생성을 진행 중입니다..."
     : "프롬프트 구성 완료! 아래 [프롬프트 복사]를 눌러 무료 ChatGPT/Claude에 붙여넣으세요.";
 
   openModal(el.aiModal);
@@ -383,17 +383,17 @@ async function requestAiTask(task, params = {}) {
 
     if (directCall) {
       if (data.success && data.text) {
-        el.aiOutputText.textContent = data.text;
+        el.aiOutputText.value = data.text;
       } else {
-        el.aiOutputText.textContent = `❌ 오류 발생: ${data.error || "호출 실패"}\n\n[프롬프트 복사] 버튼을 눌러 웹에서 직접 사용해보세요.`;
+        el.aiOutputText.value = `❌ 오류 발생: ${data.error || "호출 실패"}\n\n[프롬프트 복사] 버튼을 눌러 웹에서 직접 사용해보세요.`;
       }
     } else {
-      el.aiOutputText.textContent = "💡 API 키가 등록되지 않아 [프롬프트 자동 조립 모드]로 동작했습니다.\n\n아래 '📋 프롬프트 복사' 버튼을 눌러 무료 웹 ChatGPT나 Claude에 붙여넣으시면 최상의 웹소설 결과물을 얻으실 수 있습니다!";
+      el.aiOutputText.value = "💡 API 키가 등록되지 않아 [프롬프트 자동 조립 모드]로 동작했습니다.\n\n아래 '📋 프롬프트 복사' 버튼을 눌러 무료 웹 ChatGPT나 Claude에 붙여넣으시면 최상의 웹소설 결과물을 얻으실 수 있습니다!\n\n(결과를 직접 이 칸에 붙여넣거나 다듬은 뒤 [적용하기]를 누르면 그 내용이 반영됩니다.)";
     }
 
     return data;
   } catch (err) {
-    el.aiOutputText.textContent = "통신 오류가 발생했습니다: " + err.message;
+    el.aiOutputText.value = "통신 오류가 발생했습니다: " + err.message;
   }
 }
 
@@ -430,7 +430,7 @@ function bindEvents() {
 
   // Input auto-save listeners
   const autoInputs = [
-    el.planTitle, el.planGenre, el.planKeywords, el.planIdea, 
+    el.planTitle, el.planGenre, el.planKeywords, el.planIdea,
     el.planLogline, el.planWorldRules, el.epTitleInput, el.epGoalInput, el.epPlotInput
   ];
   autoInputs.forEach(input => {
@@ -485,8 +485,8 @@ function bindEvents() {
 
   // Step 3: Episodes
   el.btnAddEpisode.addEventListener("click", () => {
-    const nextNum = (state.currentProject.episodes.length > 0) 
-      ? Math.max(...state.currentProject.episodes.map(e => e.num)) + 1 
+    const nextNum = (state.currentProject.episodes.length > 0)
+      ? Math.max(...state.currentProject.episodes.map(e => e.num)) + 1
       : 1;
     state.currentProject.episodes.push({
       num: nextNum,
@@ -601,12 +601,12 @@ function bindEvents() {
     alert("📋 정밀 웹소설 프롬프트가 복사되었습니다! 무료 웹 ChatGPT/Claude에 붙여넣으세요.");
   });
   el.btnCopyOutput.addEventListener("click", () => {
-    navigator.clipboard.writeText(el.aiOutputText.textContent);
+    navigator.clipboard.writeText(el.aiOutputText.value);
     alert("📄 생성 결과가 클립보드에 복사되었습니다.");
   });
   el.btnApplyAiResult.addEventListener("click", () => {
     if (state.pendingAiAction) {
-      const resultText = el.aiOutputText.textContent;
+      const resultText = el.aiOutputText.value;
       state.pendingAiAction(resultText);
       closeModal(el.aiModal);
       alert("✅ 내용이 에디터에 적용되었습니다!");
