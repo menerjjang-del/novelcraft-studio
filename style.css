@@ -732,7 +732,18 @@ label {
   gap: 10px;
 }
 
+.ai-result-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.modal-sublabel {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
 .ai-output-box {
+  width: 100%;
   background: var(--bg-input);
   border: 1px solid var(--border-color);
   padding: 14px;
@@ -740,11 +751,11 @@ label {
   font-size: 0.92rem;
   line-height: 1.7;
   color: #f1f5f9;
-  max-height: 320px;
-  overflow-y: auto;
-  white-space: pre-wrap;
+  min-height: 180px;
+  max-height: 60vh;
 }
 .prompt-box {
+  width: 100%;
   background: #0b0d13;
   color: #94a3b8;
   font-family: monospace;
